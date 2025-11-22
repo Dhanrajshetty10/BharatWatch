@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../api";
 import "./navbar.css";
 import logo from "../../logo.png";
 import darklogo from "../../logodark.png";
@@ -17,11 +18,21 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   const navigate = useNavigate();
   const theme = darkMode ? "dark" : "light";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userName] = useState("HeyitsMe");
+  const [loggedIn, setLoggedIn] = useState(api.isAuthenticated());
+  const [userName, setUserName] = useState("");
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
 
   const dropdownRef = useRef();
+
+  useEffect(() => {
+    if (api.isAuthenticated()) {
+      const user = api.getUser();
+      setUserName(user.fullName || user.email || "User");
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (isSidebarOpen) {
@@ -44,13 +55,12 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   const toggleTheme = () => setDarkMode(!darkMode);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await api.logout();
     setLoggedIn(false);
     setShowAccountDropdown(false);
     navigate("/home");
   };
-
-  // Media Query - detect mobile, moves nav buttons to sidebar
   const isMobile = window.matchMedia("(max-width: 700px)").matches;
 
   return (
@@ -96,7 +106,6 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             </div>
             <button className="mic-btn" aria-label="Voice Search">
               <svg
-                // className="mic-btn svg"
                 width="50"
                 height="50"
                 viewBox="0 0 50 50"
@@ -266,6 +275,9 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           <li className="sidebar-item" onClick={() => navigate("/feedback")}>
             <img src={Feedbacklogo} className="icon" alt="Feedback" />
             <span>Feedback</span>
+          </li>
+          <li className="sidebar-item" onClick={() => navigate("/drafts")}>
+            <span>Draft</span>
           </li>
           <li className="sidebar-item" onClick={() => navigate("/help")}>
             <img src={help} className="icon" alt="Help" />

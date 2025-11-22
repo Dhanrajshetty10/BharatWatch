@@ -1,13 +1,14 @@
-
 import dotenv from "dotenv";
+dotenv.config({
+  path: "./.env",
+});
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
 dotenv.config({
   path: "./.env",
 });
+import "./services/cloudinary.js"; // Initialize Cloudinary configuration
 import { transporter } from "./services/emailTransporter.js";
-
-
 
 connectDB()
   .then(() => {
@@ -19,9 +20,7 @@ connectDB()
     console.log("MongoDB connection failed !!!", error);
   });
 
-
-  
-  transporter.verify((err, success) => {
-    if (err) console.error("SMTP connection failed:", err);
-    else console.log("SMTP ready to send emails");
-  });
+transporter.verify((err, success) => {
+  if (err) console.error("SMTP connection failed:", err);
+  else console.log("SMTP ready to send emails");
+});
