@@ -23,6 +23,9 @@ export const getSnipById = async (req, res) => {
   }
 };
 
+
+
+
 // POST new snip (image/video URL, title, caption etc.)
 export const createSnip = async (req, res) => {
   try {
@@ -45,6 +48,9 @@ export const createSnip = async (req, res) => {
 };
 
 
+
+
+
 // POST comment
 export const addComment = async (req, res) => {
   try {
@@ -61,6 +67,9 @@ export const addComment = async (req, res) => {
   }
 };
 
+
+
+
 // LIKE Snip (increment likeCount)
 export const likeSnip = async (req, res) => {
   try {
@@ -74,6 +83,10 @@ export const likeSnip = async (req, res) => {
   }
 };
 
+
+
+
+
 // Delete a snip
 export const deleteSnip = async (req, res) => {
   try {
@@ -84,3 +97,6 @@ export const deleteSnip = async (req, res) => {
     res.status(500).json({ message: "Error deleting snip", error: err });
   }
 };
+
+
+
